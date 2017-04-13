@@ -350,7 +350,7 @@ class Grouper(utils.QueueItem):
     '''
     name = 'grouper'
     
-    def __init__(self, t0, win, groupTag, eventDicts, wait=1, maxWait=60, graceDB_url='https://gracedb.ligo.org/api'):
+    def __init__(self, t0, win, groupTag, eventDicts, decisionWin=60, graceDB_url='https://gracedb.ligo.org/api'):
         self.graceid = groupTag ### record data bout this group
 
         self.eventDicts = eventDicts ### pointer to the dictionary of dictionaries, which we will need to determine whether a decision can be made
@@ -359,29 +359,23 @@ class Grouper(utils.QueueItem):
 
         self.events = [] ### shared reference that is passed to DefineGroup task
 
-        self.t0 = t0
-        self.closure = t0+win ### when the acceptance gate closes
+        self.t0 = t0 # this is the time of the first lvalert type new arrival that sparked the creation of this Grouper queueItem. it is in unix time!!!
+        self.closure = t0+decisionWin ### when the acceptance gate closes
 
-        self.wait = wait ### the amount we wait (repeatedly) while looking for more information before making a decision
-        self.maxWait = maxWait ### the maximum amount of time after self.closure that we wait for necessary info to make a decision
-
-        tasks = [DefineGroup(self.events, eventDicts, win, graceDB_url=graceDB_url) ### only one task!
+        tasks = [DefineGroup(self.events, eventDicts, decisionWin, graceDB_url=graceDB_url) ### only one task!
                 ]
         super(Grouper, self).__init__(t0, tasks) ### delegate to parent
-
-    def isOpen(self):
-        '''
-        determines whether the Group is still accepting new events
-        '''
-        return time.time() < self.closure
 
     def addEvent(self, graceid):
         '''
         adds a graceid to the DefineGroup task
         NOTE: we do NOT check whether the grouper is open before adding the event. 
         This allows us the flexibility to ignore which groupers are still open if needed and "force" events into the mix.
+        Also note: any event added after the acceptance gate has closed will be labeled as EM_Superseded
         '''
         self.events.append( graceid )
+        self.eventDicts[graceid][grouperGroupTag] = self.graceid
+        self.eventDicts[graceid][grouperGroupMembers] = []
 
     def canDecide(self):
         """
@@ -399,16 +393,6 @@ class Grouper(utils.QueueItem):
             return goodToGo
         """
         return True
-
-    def execute(self, verbose=False ):
-        '''
-        override parent method to handle the case where we cannot make a decision yet
-        we can just set this up to poll every second or so until we can decide or there is a hard timeout. Then we force a decision.
-        '''
-        if self.canDecide() or (time.time() > self.closure+self.maxWait): ### we can decide or we've timed out
-            super(Grouper, self).execute( verbose=verbose ) ### delegate to the parent
-        else: ### we have not timed out and we cannot yet decide
-            self.setExpiration( self.t0+self.wait ) ### increment the expiration time by wait
 
 class DefineGroup(utils.Task):
     '''
