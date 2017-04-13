@@ -33,7 +33,7 @@ execfile(VIRTUALENV_ACTIVATOR, dict(__file__=VIRTUALENV_ACTIVATOR))
 #--------------------
 
 # main checks when currentstate of event is new_to_preliminary
-new_to_preliminary = [
+selected_to_preliminary = [
     'farCheck',
     'labelCheck',
     'injectionCheck'
@@ -337,7 +337,7 @@ def parseAlert(queue, queueByGraceID, alert, t0, config):
             queue.insert( item ) ### add to overall queue
 
             newSortedQueue = utils.SortedQueue() # create sorted queue for event candidate
-            newSortedQueue.insert(item) # put ForgetMeNow queue item into the sorted queue
+            newSortedQueue.insert(item) # put PipelineThrottle queue item into the sorted queue
             queueByGraceID[item.graceid] = newSortedQueue # add queue item to the queueByGraceID
 
         item.addEvent( graceid, t0 ) ### add new event to throttle
@@ -548,17 +548,17 @@ def parseAlert(queue, queueByGraceID, alert, t0, config):
 
     passedcheckcount = 0
 
-    if currentstate=='new_to_preliminary':
+    if currentstate=='selected_to_preliminary':
         time.sleep(wait_for_hardware_inj) #this is for those cases where we dont have the INJ label right away
         queried_dict = g.events(graceid).next() #query gracedb for the graceid
         event_dict.data['labels'] = queried_dict['labels'].keys() #get the latest labels before running checks
-        for Check in new_to_preliminary:
+        for Check in selected_to_preliminary:
             eval('event_dict.{0}()'.format(Check))
             checkresult = event_dict.data[Check + 'result']
             if checkresult==None:
                 pass
             elif checkresult==False:
-                # because in 'new_to_preliminary' state, no need to apply DQV label
+                # because in 'selected_to_preliminary' state, no need to apply DQV label
                 message = '{0} -- {1} -- Failed {2} in currentstate: {3}.'.format(convertTime(), graceid, Check, currentstate)
                 if loggerCheck(event_dict.data, message)==False:
                     logger.info(message)
@@ -576,7 +576,7 @@ def parseAlert(queue, queueByGraceID, alert, t0, config):
                 return 0
             elif checkresult==True:
                 passedcheckcount += 1
-        if passedcheckcount==len(new_to_preliminary):
+        if passedcheckcount==len(selected_to_preliminary):
             message = '{0} -- {1} -- Passed all {2} checks.'.format(convertTime(), graceid, currentstate)
             if loggerCheck(event_dict.data, message)==False:
                 logger.info(message)
