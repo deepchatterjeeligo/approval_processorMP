@@ -455,11 +455,9 @@ def parseAlert(queue, queueByGraceID, alert, t0, config):
 #            else:
 #                raise ValueError('could not find ForgetMeNow QueueItem for graceid=%s'%graceid)
 
-        elif description=="EM_Selected": ### this event was selected by a Grouper 
-            raise NotImplementedError('write logic to handle \"Selected\" labels')
-
         elif description=="EM_Superseded": ### this event was superceded by another event within Grouper
-            raise NotImplementedError('write logic to handle \"Superseded" labels')
+            # the currentstate should be updated to em_superseded
+            event_dict.data['superseded']
 
         elif (checkLabels(description.split(), config) > 0): ### some other label was applied. We may need to issue a retraction notice.
             event_dict.data['currentstate'] = 'rejected'
@@ -472,17 +470,12 @@ def parseAlert(queue, queueByGraceID, alert, t0, config):
                     process_alert(event_dict.data, 'retraction', g, config, logger)
 
         saveEventDicts(approval_processorMPfiles) ### save the updated eventDict to disk
-        return 0
-
-    ### FIXME: Reed left off commenting here...
-
-
-
-
-
-
-
-
+        if description=='EM_Selected':
+            event_dict.data['currentstate'] = 'selected_to_preliminary'
+            # we want to get to the block of code where we perform checks for selected_to_preliminary events so pass, rather than return 0
+            pass
+        else:
+            return 0
 
     elif alert_type=='update':
         # first the case that we have a new lvem skymap
