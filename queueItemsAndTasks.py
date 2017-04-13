@@ -494,7 +494,7 @@ class DefineGroup(utils.Task):
         attempts to label the graceid as "EM_Selected"
         """
         try:
-            self.gdb.writeLabel( graceid, "EM_Selected" )
+            self.graceDB.writeLabel( graceid, "EM_Selected" )
         except:
             pass ### FIXME: print some intelligent error message here!
 
@@ -503,7 +503,7 @@ class DefineGroup(utils.Task):
         attempts to label the graceid as "EM_Superseded"
         """
         try:
-            self.gdb.writeLabel( graceid, "EM_Superseded" )
+            self.graceDB.writeLabel( graceid, "EM_Superseded" )
         except:
             pass ### FIXME: print some intelligent error message here!
 
