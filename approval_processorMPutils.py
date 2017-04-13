@@ -347,45 +347,30 @@ def parseAlert(queue, queueByGraceID, alert, t0, config):
             ### send some warning message?
             return 0 ### we're done here because we're ignoring this event -> exit from parseAlert
 
-#        #----------------
-#        ### pass data to Grouper
-#        #----------------
-#        raise Warning("Grouper is not implemented yet! we're currently using a temporate groupTag and prototype code")
+        #----------------
+        ### pass data to Grouper
+        #----------------
+        ### get the best groupTag from the queueByGraceID for this event gpstime, or create a new groupTag
+        grouperWin = config.getfloat('grouper', 'grouperWin')
+        groupTag = generate_GroupTag(event_dict.data, grouperWin, queueByGraceID)
 
-#        '''
-#        need to extract groupTag from group_pipeline[_search] mapping. 
-#            These associations should be specified in the config file, so we'll have to specify this somehow.
-#            probably just a "Grouper" section, with (option = value) pairs that look like (groupTag = nodeA nodeB nodeC ...)
-#        '''
-#        groupTag = 'TEMPORARY'
+        ### check to see if Grouper exists for this groupTag
+        if queueByGraceID.has_key(groupTag): ### this is not a new Grouper we have to create, so pull it up
+            if len(queueByGraceID[groupTag]) > 1:
+                raise ValueError('too many QueueItems in SortedQueue for groupTag={0}'.format(groupTag))
+            item = queueByGraceID[groupTag][0] ### there should only be one item in this SortedQueue
 
-#        ### check to see if Grouper exists for this groupTag
-#        if queueByGraceID.has_key(groupTag): ### at least one Grouper already exists
+        else: ### we need to make a Grouper
+            decisionWin = config.getfloat('grouper', 'decisionWin')
+            item = Grouper(t0, grouperWin, groupTag, eventDictionaries, decisionWin, graceDB_url=client) ### create the actual QueueItem
 
-#            ### determine if any of the existing Groupers are still accepting new triggers
-#            for item in queueByGraceID[groupTag]:
-#                if item.isOpen():
-#                    break ### this Grouper is still open, so we'll just use it
-#            else: ### no Groupers are open, so we need to create one
-#                item = Grouper(t0, grouperWin, groupTag, eventDicts, graceDB_url=client) ### create the actual QueueItem
+            queue.insert( item ) ### insert it in the overall queue
 
-#                queue.insert( item ) ### insert it in the overall queue
+            newSortedQueue = utils.SortedQueue() ### set up the SortedQueue for queueByGraceID
+            newSortedQueue.insert(item)
+            queueByGraceID[groupTag] = newSortedQueue
 
-#                newSortedQueue = utils.SortedQueue() ### set up the SortedQueue for queueByGraceID
-#                newSortedQueue.insert(item)
-#                queueByGraceID[groupTag] = newSortedQueue  
-
-#        else: ### we need to make a Grouper
-#            grouperWin = config.getfloat('grouper', 'grouperWin')
-#            item = Grouper(t0, grouperWin, groupTag, eventDicts, graceDB_url=client) ### create the actual QueueItem
-
-#            queue.insert( item ) ### insert it in the overall queue
-
-#            newSortedQueue = utils.SortedQueue() ### set up the SortedQueue for queueByGraceID
-#            newSortedQueue.insert(item)
-#            queueByGraceID[groupTag] = newSortedQueue
-
-#        item.addEvent( graceid ) ### add this graceid to the item
+        item.addEvent( graceid ) ### add this graceid to the item
 
         return 0 ### we're done here. When Grouper makes a decision, we'll tick through the rest of the processes with a "selected" label
 
