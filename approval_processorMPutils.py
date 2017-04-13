@@ -371,7 +371,11 @@ def parseAlert(queue, queueByGraceID, alert, t0, config):
             queueByGraceID[groupTag] = newSortedQueue
 
         item.addEvent( graceid ) ### add this graceid to the item
+        ### update the event dictionaries for all members of this group to reflect all the current members of the group with this groupTag
+        for groupMember in item.events:
+            eventDictionaries[groupMember][grouperGroupMembers] = item.events
 
+        saveEventDicts(approval_processorMPfiles)
         return 0 ### we're done here. When Grouper makes a decision, we'll tick through the rest of the processes with a "selected" label
 
     elif alert_type=='label':
