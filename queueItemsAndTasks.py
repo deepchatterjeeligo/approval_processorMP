@@ -315,6 +315,26 @@ class Throttle(utils.Task):
 # Grouper
 # used to group nearby events 
 #-------------------------------------------------
+def generate_GroupTag(event_dict, grouperWin, queueByGraceID):
+    '''
+    returns a string that will be used as the graceid to identify the correct grouper QueueItem from the queueByGraceID
+    '''
+    eventGPStime = float(event_dict['gpstime'])
+    upperGPStime = eventGPStime + grouperWin
+    lowerGPStime = eventGPStime - grouperWin
+    Dt = grouperWin #will be used to track the grouper queueItem whose gpstime is closest to our eventGPStime
+    GrouperGPStime = None #by default because we haven't begun our search yet
+    for graceID in queueByGraceID:
+        if 'Group_' in graceID:
+            grouperGPStime = float(re.findall('Group_(.*)', graceID)[0])
+            if grouperGPStime >= lowerGPStime and grouperGPStime <= upperGPStime: #our current event could go into this grouper, so calculate dt and compare to Dt
+                dt = abs(eventGPStime - grouperGPStime)
+                if dt <= Dt:
+                    Dt = dt
+                    GrouperGPStime = grouperGPStime
+    if GrouperGPStime==None:
+        GrouperGPStime = eventGPStime
+    return "Group_{0}".format(GrouperGPStime)
 
 class Grouper(utils.QueueItem):
     '''
