@@ -375,7 +375,6 @@ class Grouper(utils.QueueItem):
         '''
         self.events.append( graceid )
         self.eventDicts[graceid][grouperGroupTag] = self.graceid
-        self.eventDicts[graceid][grouperGroupMembers] = []
 
     def canDecide(self):
         """
