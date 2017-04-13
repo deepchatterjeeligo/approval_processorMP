@@ -362,6 +362,10 @@ class Grouper(utils.QueueItem):
         self.t0 = t0 # this is the time of the first lvalert type new arrival that sparked the creation of this Grouper queueItem. it is in unix time!!!
         self.closure = t0+decisionWin ### when the acceptance gate closes
 
+        self.win = win ### the window around first lvalert type new eventGpstime
+
+        self.grouperGPStime = float(re.findall('Group_(.*)', groupTag)[0])
+
         tasks = [DefineGroup(self.events, eventDicts, decisionWin, graceDB_url=graceDB_url) ### only one task!
                 ]
         super(Grouper, self).__init__(t0, tasks) ### delegate to parent
@@ -373,9 +377,15 @@ class Grouper(utils.QueueItem):
         This allows us the flexibility to ignore which groupers are still open if needed and "force" events into the mix.
         Also note: any event added after the acceptance gate has closed will be labeled as EM_Superseded
         '''
-        self.events.append( graceid )
-        self.eventDicts[graceid][grouperGroupTag] = self.graceid
-
+        ### double check that the new event's eventGPStime is within +-win of the grouperGPStime 
+        upperLimit = self.grouperGPStime + self.win
+        lowerLimit = self.grouperGPStime - self.win
+        if self.eventDicts[graceid]['gpstime'] <= upperLimit and self.eventDicts[graceid]['gpstime']>= lowerLimit:
+            self.events.append( graceid )
+            self.eventDicts[graceid][grouperGroupTag] = self.graceid
+        else:
+            ###something is really wrong, so alert Mina
+            pass
     def canDecide(self):
         """
         determines whether we have enough information to make this decision
