@@ -446,7 +446,7 @@ def parseAlert(queue, queueByGraceID, alert, t0, config):
 
         elif description=="EM_Superseded": ### this event was superceded by another event within Grouper
             # the currentstate should be updated to em_superseded
-            event_dict.data['superseded']
+            event_dict.data['currentsate'] = 'superseded'
 
         elif (checkLabels(description.split(), config) > 0): ### some other label was applied. We may need to issue a retraction notice.
             event_dict.data['currentstate'] = 'rejected'
@@ -531,9 +531,6 @@ def parseAlert(queue, queueByGraceID, alert, t0, config):
     passedcheckcount = 0
 
     if currentstate=='selected_to_preliminary':
-        time.sleep(wait_for_hardware_inj) #this is for those cases where we dont have the INJ label right away
-        queried_dict = g.events(graceid).next() #query gracedb for the graceid
-        event_dict.data['labels'] = queried_dict['labels'].keys() #get the latest labels before running checks
         for Check in selected_to_preliminary:
             eval('event_dict.{0}()'.format(Check))
             checkresult = event_dict.data[Check + 'result']
