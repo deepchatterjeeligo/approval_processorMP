@@ -64,7 +64,7 @@ class EventDict():
             'advocatelogkey'             : 'no',
             'advocatesignoffs'           : [],
             'configuration'              : self.configdict,
-            'currentstate'               : 'new_to_preliminary',
+            'currentstate'               : 'new_awaiting_grouperSelection',
             'far'                        : self.dictionary['far'],
             'farCheckresult'             : None,
             'farlogkey'                  : 'no',
