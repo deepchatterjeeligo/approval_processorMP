@@ -8,7 +8,7 @@ from lvalertMP.lvalert import lvalertMPutils as utils
 from ligo.gracedb.rest import GraceDb
 
 import time
-
+import re
 import numpy as np
 
 #-------------------------------------------------
