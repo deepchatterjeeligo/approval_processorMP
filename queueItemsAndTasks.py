@@ -382,7 +382,7 @@ class Grouper(utils.QueueItem):
         lowerLimit = self.grouperGPStime - self.win
         if self.eventDicts[graceid]['gpstime'] <= upperLimit and self.eventDicts[graceid]['gpstime']>= lowerLimit:
             self.events.append( graceid )
-            self.eventDicts[graceid][grouperGroupTag] = self.graceid
+            self.eventDicts[graceid]['grouperGroupTag'] = self.graceid
         else:
             ###something is really wrong, so alert Mina
             pass
