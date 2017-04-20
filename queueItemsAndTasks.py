@@ -10,6 +10,8 @@ from ligo.gracedb.rest import GraceDb
 import time
 import re
 import numpy as np
+import json
+import os
 
 #-------------------------------------------------
 # ForgetMeNow
@@ -366,7 +368,7 @@ class Grouper(utils.QueueItem):
 
         self.grouperGPStime = float(re.findall('Group_(.*)', groupTag)[0])
 
-        tasks = [DefineGroup(self.events, eventDicts, decisionWin, graceDB_url=graceDB_url) ### only one task!
+        tasks = [DefineGroup(self.graceid, self.events, eventDicts, decisionWin, graceDB_url=graceDB_url) ### only one task!
                 ]
         super(Grouper, self).__init__(t0, tasks) ### delegate to parent
 
@@ -412,10 +414,11 @@ class DefineGroup(utils.Task):
     name = 'decide'
     description = 'a task that defines a group and selects which element is preferred'
 
-    def __init__(self, events, eventDicts, timeout, graceDB_url='https://gracedb.ligo.org/api'):
+    def __init__(self, groupTag, events, eventDicts, timeout, graceDB_url='https://gracedb.ligo.org/api'):
         self.events = events ### shared reference to events tracked within Grouper QueueItem
         self.eventDicts = eventDicts ### shared reference pointing to the local data about events
         self.graceDB = GraceDb( graceDB_url )
+        self.groupTag = groupTag
         super(DefineGroup, self).__init__(timeout)
     def decide(self, verbose=False):
         '''
@@ -439,9 +442,19 @@ class DefineGroup(utils.Task):
                 selected = graceid
 
         ### label events in GraceDb. This will initiate all the necessary processing when alert_type='label' messages are received
-        self.labelAsSelected( selected )
+        self.labelAsSelected( selected ):
         for graceid in superseded:
             self.labelAsSuperseded( graceid )
+
+        ### one more step -- upload to each of the event logs a json file with grouper related information
+        grouper_json = {}
+        grouper_json['groupTag'] = self.groupTag
+        grouper_json['EM_Selected'] = selected
+        grouper_json['EM_Superseded'] = superseded
+        for graceid in self.events:
+            self.writeJSON(graceid, grouper_json)
+        # remove the grouper related json file
+        os.remove('/tmp/{0}.json'.format(self.groupTag))
 
     def choose(self, graceidA, graceidB ):
         """
@@ -499,6 +512,13 @@ class DefineGroup(utils.Task):
             self.graceDB.writeLabel( graceid, "EM_Superseded" )
         except:
             pass ### FIXME: print some intelligent error message here!
+
+    def writeJSON(self, graceid, grouper_json):
+        grouper_json = json.dumps(grouper_json)
+        tmpfile = open('/tmp/{0}.json'.format(self.groupTag), 'w')
+        tmpfile.write(grouper_json)
+        tmpfile.close()
+        self.graceDB.writeLog( graceid, 'AP: Grouper made a selection.', filename='/tmp/{0}.json'.format(self.groupTag), tagname="em_follow")
 
 class GroupPipelineSearch():
     '''
