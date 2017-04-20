@@ -442,7 +442,7 @@ class DefineGroup(utils.Task):
                 selected = graceid
 
         ### label events in GraceDb. This will initiate all the necessary processing when alert_type='label' messages are received
-        self.labelAsSelected( selected ):
+        self.labelAsSelected( selected )
         for graceid in superseded:
             self.labelAsSuperseded( graceid )
 
