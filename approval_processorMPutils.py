@@ -135,6 +135,12 @@ def parseAlert(queue, queueByGraceID, alert, t0, config):
         logger = loadLogger(config)
         logger.info('\n{0} ************ approval_processorMP.log RESTARTED ************\n'.format(convertTime()))
 
+    global time_of_restart
+    if globals().has_key('time_of_restart'): # check to see if this is the first lvalert we process after a restart of approval processor
+        time_of_restart = globals()['time_of_restart']
+    else:
+        time_of_restart = t0 # this is needed later for grouper, so that upon a restart of approval_processor, we know whether we need to query gracedb or not
+
     #-------------------------------------------------------------------
     # extract relevant info about this alert
     #-------------------------------------------------------------------
