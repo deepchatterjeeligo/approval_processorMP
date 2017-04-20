@@ -139,7 +139,7 @@ def parseAlert(queue, queueByGraceID, alert, t0, config):
 
     global gpstime_of_restart
     if globals().has_key('gpstime_of_restart'): # check to see if this is the first lvalert we process after a restart of approval processor
-        time_of_restart = globals()['gpstime_of_restart']
+        gpstime_of_restart = globals()['gpstime_of_restart']
     else: # this is needed later for grouper, so that upon a restart of approval_processor, we know whether we need to query gracedb or not
         utc_t0 = convertTime(t0) # t0 is in linux time. we converted it into a UTC string
         gpstime_of_restart = Time(utc_t0, format='iso', scale='utc').gps
