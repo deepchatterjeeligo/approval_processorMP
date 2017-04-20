@@ -12,6 +12,8 @@ from approval_processorMPcommands import parseCommand
 from lvalertMP.lvalert import lvalertMPutils as utils
 from ligo.gracedb.rest import GraceDb, HTTPError
 
+from astropy.time import Time
+
 import os
 import json
 import urllib
@@ -135,11 +137,12 @@ def parseAlert(queue, queueByGraceID, alert, t0, config):
         logger = loadLogger(config)
         logger.info('\n{0} ************ approval_processorMP.log RESTARTED ************\n'.format(convertTime()))
 
-    global time_of_restart
-    if globals().has_key('time_of_restart'): # check to see if this is the first lvalert we process after a restart of approval processor
-        time_of_restart = globals()['time_of_restart']
-    else:
-        time_of_restart = t0 # this is needed later for grouper, so that upon a restart of approval_processor, we know whether we need to query gracedb or not
+    global gpstime_of_restart
+    if globals().has_key('gpstime_of_restart'): # check to see if this is the first lvalert we process after a restart of approval processor
+        time_of_restart = globals()['gpstime_of_restart']
+    else: # this is needed later for grouper, so that upon a restart of approval_processor, we know whether we need to query gracedb or not
+        utc_t0 = convertTime(t0) # t0 is in linux time. we converted it into a UTC string
+        gpstime_of_restart = Time(utc_t0, format='iso', scale='utc').gps
 
     #-------------------------------------------------------------------
     # extract relevant info about this alert
@@ -359,7 +362,7 @@ def parseAlert(queue, queueByGraceID, alert, t0, config):
         ### first check whether this event has a gpstime that is before the time of restart of approval_processor. if this is true, we query gracedb for events around the event gpstime that have been labeled EM_Selected. else, we create a grouper item
         grouperWin = config.getfloat('grouper', 'grouperWin')
         already_selected = False
-        if event_dict.data['gpstime'] < time_of_restart: # need to convert gpstime to linux time
+        if event_dict.data['gpstime'] < gpstime_of_restart:
             query_string = 'gpstime: {0} .. {1}'.format(str(event_dict.data['gpstime']-grouperWin), str(event_dict.data['gpstime']+grouperWin))
             events = g.events(query_string) # query GraceDb for events
             for event in events: # look to see if any were labeled EM_Selected
