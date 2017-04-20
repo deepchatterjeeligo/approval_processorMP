@@ -356,8 +356,23 @@ def parseAlert(queue, queueByGraceID, alert, t0, config):
         #----------------
         ### pass data to Grouper
         #----------------
-        ### get the best groupTag from the queueByGraceID for this event gpstime, or create a new groupTag
+        ### first check whether this event has a gpstime that is before the time of restart of approval_processor. if this is true, we query gracedb for events around the event gpstime that have been labeled EM_Selected. else, we create a grouper item
         grouperWin = config.getfloat('grouper', 'grouperWin')
+        already_selected = False
+        if event_dict.data['gpstime'] < time_of_restart: # need to convert gpstime to linux time
+            query_string = 'gpstime: {0} .. {1}'.format(str(event_dict.data['gpstime']-grouperWin), str(event_dict.data['gpstime']+grouperWin))
+            events = g.events(query_string) # query GraceDb for events
+            for event in events: # look to see if any were labeled EM_Selected
+                labels = event['labels'] # get the dictionary of labels
+                if labels.has_key('EM_Selected'):
+                   already_selected = True
+        if already_selected: # label this event as EM_Superseded, no need to do more
+            g.writeLabel(graceid, 'EM_Superseded')
+            return 0
+        else: # we need to make a groupTag and grouper, or pull down existing ones
+            pass
+
+        ### get the best groupTag from the queueByGraceID for this event gpstime, or create a new groupTag
         groupTag = generate_GroupTag(event_dict.data, grouperWin, queueByGraceID)
 
         ### check to see if Grouper exists for this groupTag
