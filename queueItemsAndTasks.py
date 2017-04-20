@@ -527,9 +527,9 @@ class GroupPipelineSearch():
                         'CWB'         :0,
                         'LIB'         :0,
                        } ### all pipelines are equal
-    __searchRank__   = {'LowMass' :1,   ### events with "search" specified are preferred over events without "search" specified
-                        'HighMass':1,
-                        'AllSky'  :1,
+    __searchRank__   = {'LowMass' :0,   ### events with "search" specified are equivalent to events without "search" specified
+                        'HighMass':0,
+                        'AllSky'  :0,
                         ''        :0,
                         None      :0,
                        }
