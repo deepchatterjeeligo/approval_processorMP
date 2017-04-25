@@ -85,6 +85,7 @@ if more_than_one_group=='Y':
 #### next alter the graceid's so that there's no issue with trying to access event in gracedb
 for i in range(len(pipelines)):
     lvalerts[pipelines[i]]['object']['graceid'] = 'G_{0}'.format(i)
+    lvalerts[pipelines[i]]['uid'] = 'G_{0}'.format(i)
 
 #### next create the json files we will send
 for i in range(len(pipelines)):
