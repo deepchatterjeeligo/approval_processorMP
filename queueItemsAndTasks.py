@@ -582,7 +582,7 @@ class GroupPipelineSearch():
     def __eq__(self, other):
         return (self.groupRank==other.groupRank) and (self.pipelineRank==other.pipelineRank) and (self.searchRank==other.searchRank)
 
-    def __neq__(self, other):
+    def __ne__(self, other):
         return (not self==other)
 
     def __lt__(self, other):
