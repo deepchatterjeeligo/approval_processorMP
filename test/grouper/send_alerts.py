@@ -72,11 +72,12 @@ current_time = time.time()
 for i in range(len(pipelines)):
     lvalerts[pipelines[i]]['object']['gpstime'] = current_time + random.random()
 
+import ConfigParser
+config = ConfigParser.SafeConfigParser()
+config.read('/home/guest/approval_processorMP/etc/childConfig-approval_processorMPtest.ini')
+
 #### next alter the gpstimes again if more than one grouper is being created
 if more_than_one_group=='Y':
-    import ConfigParser
-    config = ConfigParser.SafeConfigParser()
-    config.read('/home/guest/approval_processorMP/etc/childConfig-approval_processorMPtest.ini')
     grouperWin = config.getfloat('grouper', 'grouperWin')
     sample = random.sample(pipelines, 1)[0] # randomly select which one gets sent with a gpstime that is spaced out by more than grouperWin from the others
     lvalerts[sample]['object']['gpstime'] += grouperWin
@@ -129,8 +130,7 @@ if late_trigger=='Y':
     run('/usr/local/bin/lvalert_send -N {0}/.netrc --server lvalert.cgca.uwm.edu --node min-a.cho-test --file {1}test.json'.format(homedir, sample))
 
 
-#### print out the far's so that we know
-print('\nPrinting out the fars')
-for key in fars:
-    print('{0}: {1}'.format(key, fars[key]))
-
+#### print out information so that we know
+print('\nPrinting out graceid -- pipeline -- far')
+for pipeline in pipelines:
+    print('{0} -- {1} -- {2}'.format(lvalerts[pipeline]['uid'], pipeline, fars[pipeline]))
