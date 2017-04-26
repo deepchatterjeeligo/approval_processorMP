@@ -126,6 +126,7 @@ if late_trigger=='Y':
             run('/usr/local/bin/lvalert_send -N {0}/.netrc --server lvalert.cgca.uwm.edu --node min-a.cho-test --file {1}test.json'.format(homedir, pipelines[i]))
     #### at this point we've sent everything but the late trigger
     time.sleep(decisionWin)
+    time.sleep(5) # wait an extra 5 seconds just to make sure this event is sent well after a decision is reached for the first grouper object
     print('sending {0}test.json'.format(sample))
     run('/usr/local/bin/lvalert_send -N {0}/.netrc --server lvalert.cgca.uwm.edu --node min-a.cho-test --file {1}test.json'.format(homedir, sample))
 
