@@ -87,7 +87,11 @@ def parseAlert(queue, queueByGraceID, alert, t0, config):
 
     # instantiate GraceDB client from the childConfig
     client = config.get('general', 'client')
-    g = GraceDb(client)
+    # check if it is a directory because if it is, make FakeDb
+    if os.path.isdir(client):
+        g = FakeDb(client)
+    else:
+        g = GraceDb(client)
 
     # get other childConfig settings; save in configdict
     voeventerror_email        = config.get('general', 'voeventerror_email')
