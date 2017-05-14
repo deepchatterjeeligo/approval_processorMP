@@ -6,6 +6,7 @@ author = "Min-A Cho (mina19@umd.edu)"
 #-----------------------------------------------------------------------
 from ligo.gracedb.rest import GraceDb, HTTPError
 
+from ligoTest.gracedb.rest import FakeDb, FakeTTPError
 import os
 import json
 import pickle
@@ -38,6 +39,15 @@ global eventDictionaries # global variable for local bookkeeping
 ### important thing is it saves the event_dict as a DICTIONARY
 eventDictionaries = {}
 
+#-----------------------------------------------------------------------
+# Define initGracedb() function
+#-----------------------------------------------------------------------
+def initGracedb(client):
+    if 'http' in client:
+        g = GraceDb(client)
+    else:
+        # FakeDb directory is created if non-existent
+        g = FakeDb(client)
 #-----------------------------------------------------------------------
 # EventDict class
 #-----------------------------------------------------------------------
@@ -1022,7 +1032,7 @@ def resend_alert():
     client = config.get('general', 'client')
     approval_processorMPfiles = config.get('general', 'approval_processorMPfiles')
     print 'got client: {0}'.format(client)
-    g = GraceDb('{0}'.format(client))
+    g = initGraceDb('{0}'.format(client))
 
     # set up logger
     logger = loadLogger(config)
@@ -1066,7 +1076,7 @@ def resend_alert():
 def createTestEventDict(graceid):
     config = loadConfig()
     client = config.get('general', 'client')
-    g = GraceDb(client)
+    g = initGraceDb(client)
     configdict = makeConfigDict(config)
     logger = loadLogger(config)
     event_dict = EventDict()

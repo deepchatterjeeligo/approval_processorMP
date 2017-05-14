@@ -25,10 +25,10 @@ import re
 # Activate a virtualenv in order to be able to use Comet.
 #-----------------------------------------------------------------------
 
-VIRTUALENV_ACTIVATOR = "/home/alexander.pace/emfollow_gracedb/cometenv/bin/activate_this.py" ### FIXME: this shouldn't be hard coded like this. 
+#VIRTUALENV_ACTIVATOR = "/home/alexander.pace/emfollow_gracedb/cometenv/bin/activate_this.py" ### FIXME: this shouldn't be hard coded like this. 
                                                                                              ### If we need a virtual environment, it should be distributed along with the package.
                                                                                              ### That way, it is straightforward to install and run the code from *any* computer withour modifying the source code
-execfile(VIRTUALENV_ACTIVATOR, dict(__file__=VIRTUALENV_ACTIVATOR))
+#execfile(VIRTUALENV_ACTIVATOR, dict(__file__=VIRTUALENV_ACTIVATOR))
 
 #--------------------
 # Definitions of which checks must be satisfied in each state before moving on
@@ -87,11 +87,7 @@ def parseAlert(queue, queueByGraceID, alert, t0, config):
 
     # instantiate GraceDB client from the childConfig
     client = config.get('general', 'client')
-    # check if it is a directory because if it is, make FakeDb
-    if os.path.isdir(client):
-        g = FakeDb(client)
-    else:
-        g = GraceDb(client)
+    g = initGracedb(client)
 
     # get other childConfig settings; save in configdict
     voeventerror_email        = config.get('general', 'voeventerror_email')
