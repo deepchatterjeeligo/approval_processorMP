@@ -47,7 +47,11 @@ def initGracedb(client):
         g = GraceDb(client)
     else:
         # FakeDb directory is created if non-existent
-        g = FakeDb(client)
+        if os.path.exists(client):
+            g = FakeDb(client)
+        else:
+            g = None
+    return g
 #-----------------------------------------------------------------------
 # EventDict class
 #-----------------------------------------------------------------------

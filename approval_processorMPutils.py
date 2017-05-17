@@ -10,7 +10,6 @@ from eventDictClassMethods import *
 from approval_processorMPcommands import parseCommand
 
 from lvalertMP.lvalert import lvalertMPutils as utils
-from ligo.gracedb.rest import GraceDb, HTTPError
 
 from astropy.time import Time
 
@@ -88,7 +87,7 @@ def parseAlert(queue, queueByGraceID, alert, t0, config):
     # instantiate GraceDB client from the childConfig
     client = config.get('general', 'client')
     g = initGracedb(client)
-
+    print g
     # get other childConfig settings; save in configdict
     voeventerror_email        = config.get('general', 'voeventerror_email')
     force_all_internal        = config.get('general', 'force_all_internal')
@@ -158,7 +157,20 @@ def parseAlert(queue, queueByGraceID, alert, t0, config):
     # ensure we have an event_dict and ForgetMeNow tracking this graceid
     #-------------------------------------------------------------------
 
-    if alert_type=='new': ### new event -> we must first create event_dict and set up ForgetMeNow queue item for G events
+    if alert_type=='new': 
+        #-------------------------------------------------------------------
+        # neglect single IFO events
+        #-------------------------------------------------------------------
+        ifos = alert['object']['instruments']
+        print ifos
+        patt = re.compile(r'^[HLV]1$')
+        # above pattern matches one IFO location and number
+        if re.match(patt, ifos):
+            logger.info(\
+            "{0} | Single IFO trigger {1}. Neglecting... ".format(convertTime() 
+            ,alert['uid']))
+            return 0
+        ### new event -> we must first create event_dict and set up ForgetMeNow queue item for G events
 
         ### create event_dict
         event_dict = EventDict() # create a new instance of EventDict class which is a blank event_dict
