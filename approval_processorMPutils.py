@@ -87,7 +87,6 @@ def parseAlert(queue, queueByGraceID, alert, t0, config):
     # instantiate GraceDB client from the childConfig
     client = config.get('general', 'client')
     g = initGracedb(client)
-    print g
     # get other childConfig settings; save in configdict
     voeventerror_email        = config.get('general', 'voeventerror_email')
     force_all_internal        = config.get('general', 'force_all_internal')
@@ -158,18 +157,6 @@ def parseAlert(queue, queueByGraceID, alert, t0, config):
     #-------------------------------------------------------------------
 
     if alert_type=='new': 
-        #-------------------------------------------------------------------
-        # neglect single IFO events
-        #-------------------------------------------------------------------
-        ifos = alert['object']['instruments']
-        print ifos
-        patt = re.compile(r'^[HLV]1$')
-        # above pattern matches one IFO location and number
-        if re.match(patt, ifos):
-            logger.info(\
-            "{0} | Single IFO trigger {1}. Neglecting... ".format(convertTime() 
-            ,alert['uid']))
-            return 0
         ### new event -> we must first create event_dict and set up ForgetMeNow queue item for G events
 
         ### create event_dict
@@ -180,9 +167,22 @@ def parseAlert(queue, queueByGraceID, alert, t0, config):
             event_dict.setup(alert['object'], graceid, configdict, g, config, logger) # populate this event_dict with information from lvalert
         eventDicts[graceid] = event_dict # add the instance to the global eventDicts
         eventDictionaries[graceid] = event_dict.data # add the dictionary to the global eventDictionaries
-
-        ### ForgetMeNow queue item
-        item = ForgetMeNow( t0, forgetmenow_timeout, graceid, eventDicts, queue, queueByGraceID, logger)
+        #-------------------------------------------------------------------
+        # neglect single IFO events
+        #-------------------------------------------------------------------
+        ifos = event_dict.data['instruments']
+        n_ifos = len(ifos)
+        # instruments are stored in array, check how many ifos
+        if n_ifos == 1 and not(is_external_trigger(alert)):
+            forgetmenow_timeout_new = 0. ### make sure that the event is
+                                         ### schduled for removal
+            item = ForgetMeNow( t0, forgetmenow_timeout_new, graceid, eventDicts, queue, queueByGraceID, logger)
+            logger.info(\
+            "{0} | Single IFO trigger {1}. No extenal coincidence. Neglecting... ".format(convertTime() 
+            ,alert['uid']))
+        else:
+            ### ForgetMeNow queue item
+            item = ForgetMeNow( t0, forgetmenow_timeout, graceid, eventDicts, queue, queueByGraceID, logger)
         queue.insert(item) # add queue item to the overall queue
 
         ### set up queueByGraceID
@@ -224,6 +224,7 @@ def parseAlert(queue, queueByGraceID, alert, t0, config):
             else:
                 event_dict.setup(g.events(graceid).next(), graceid, configdict, g, config, logger) # fill in event_dict using queried event candidate dictionary
                 event_dict.update() # update the event_dict with signoffs and iDQ info
+                print event_dict.data['instruments']
             eventDicts[graceid] = event_dict # add this instance to the global eventDicts
             eventDictionaries[graceid] = event_dict.data # add the dictionary to the global eventDictionaries
 
