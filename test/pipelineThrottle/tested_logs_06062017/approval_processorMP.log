@@ -1,0 +1,119 @@
+
+2017-06-05 23:34:41 ************ approval_processorMP.log RESTARTED ************
+
+2017-06-05 23:34:41 -- G000000 -- Created event dictionary for G000000.
+2017-06-05 23:34:51 -- G000000 -- Low enough FAR. 4e-09 < 1.9e-07
+2017-06-05 23:34:56 -- G000000 -- No hardware injection found near event gpstime +/- 2.0 seconds.
+2017-06-05 23:34:56 -- G000000 -- Passed all new_to_preliminary checks.
+2017-06-05 23:34:56 -- G000000 -- Sending preliminary VOEvent.
+2017-06-05 23:34:56 -- G000000 -- Creating preliminary VOEvent file locally.
+2017-06-05 23:34:56 -- G000000 -- Caught HTTPError: FakeDb instance has no attribute 'createVOEvent'
+2017-06-05 23:34:56 -- G000000 -- State: new_to_preliminary --> preliminary_to_initial.
+2017-06-05 23:34:56 -- G000000 -- Labeling H1OPS.
+2017-06-05 23:34:56 -- G000000 -- Labeling L1OPS.
+2017-06-05 23:34:56 -- G000000 -- Labeling ADVREQ.
+2017-06-05 23:34:57 -- G000000 -- Have not gotten all the minfap values yet.
+2017-06-05 23:34:57 -- G000000 -- Not all operators have signed off yet.
+2017-06-05 23:34:57 -- G000000 -- Advocates have not signed off yet.
+2017-06-05 23:34:57 -- G000000 -- Got the minfap for L using ovl is 3.8e-05.
+2017-06-05 23:34:57 -- G000000 -- iDQ check result: 3.8e-05 < 0.01
+2017-06-05 23:34:57 -- G000000 -- Failed idq_joint_fapCheck in currentstate: preliminary_to_initial.
+2017-06-05 23:34:57 -- G000000 -- State: preliminary_to_initial --> rejected.
+2017-06-05 23:34:58 -- G000000 -- Labeling DQV.
+2017-06-05 23:34:58 -- G000000 -- Got the minfap for H using ovl is 0.036726.
+2017-06-05 23:35:00 -- G000000 -- Got H1OPS label.
+2017-06-05 23:35:00 -- G000000 -- Got L1OPS label.
+2017-06-05 23:35:00 -- G000000 -- Got ADVREQ label.
+2017-06-05 23:35:01 -- G000000 -- Got DQV label.
+2017-06-05 23:35:27 -- G000000 -- Got the lvem skymap lalinference_skymap.fits.gz.
+2017-06-05 23:35:33 -- G000000 -- Got the lvem skymap bayestar.fits.gz.
+2017-06-05 23:37:34 -- G000001 -- Created event dictionary for G000001.
+2017-06-05 23:37:44 -- G000001 -- Low enough FAR. 7e-09 < 1.9e-07
+2017-06-05 23:37:45 -- G000001 -- No hardware injection found near event gpstime +/- 2.0 seconds.
+2017-06-05 23:37:45 -- G000001 -- Passed all new_to_preliminary checks.
+2017-06-05 23:37:45 -- G000001 -- Sending preliminary VOEvent.
+2017-06-05 23:37:45 -- G000001 -- Creating preliminary VOEvent file locally.
+2017-06-05 23:37:45 -- G000001 -- Caught HTTPError: FakeDb instance has no attribute 'createVOEvent'
+2017-06-05 23:37:45 -- G000001 -- State: new_to_preliminary --> preliminary_to_initial.
+2017-06-05 23:37:45 -- G000001 -- Labeling H1OPS.
+2017-06-05 23:37:45 -- G000001 -- Labeling L1OPS.
+2017-06-05 23:37:45 -- G000001 -- Labeling ADVREQ.
+2017-06-05 23:37:46 -- G000002 -- Created event dictionary for G000002.
+2017-06-05 23:37:56 -- G000002 -- Low enough FAR. 1e-09 < 1.9e-07
+2017-06-05 23:37:56 -- G000002 -- Ignoring event due to INJ or DQV label.
+2017-06-05 23:37:56 -- G000002 -- Failed labelCheck in currentstate: new_to_preliminary.
+2017-06-05 23:37:56 -- G000002 -- State: new_to_preliminary --> rejected.
+2017-06-05 23:37:56 -- G000003 -- Created event dictionary for G000003.
+2017-06-05 23:38:06 -- G000003 -- Low enough FAR. 7e-09 < 1.9e-07
+2017-06-05 23:38:06 -- G000003 -- Ignoring event due to INJ or DQV label.
+2017-06-05 23:38:06 -- G000003 -- Failed labelCheck in currentstate: new_to_preliminary.
+2017-06-05 23:38:06 -- G000003 -- State: new_to_preliminary --> rejected.
+2017-06-05 23:38:06 -- G000004 -- Created event dictionary for G000004.
+2017-06-05 23:38:17 -- G000004 -- Low enough FAR. 8e-09 < 1.9e-07
+2017-06-05 23:38:17 -- G000004 -- Ignoring event due to INJ or DQV label.
+2017-06-05 23:38:17 -- G000004 -- Failed labelCheck in currentstate: new_to_preliminary.
+2017-06-05 23:38:17 -- G000004 -- State: new_to_preliminary --> rejected.
+2017-06-05 23:38:17 -- G000001 -- Have not gotten all the minfap values yet.
+2017-06-05 23:38:17 -- G000001 -- Not all operators have signed off yet.
+2017-06-05 23:38:17 -- G000001 -- Advocates have not signed off yet.
+2017-06-05 23:38:19 -- G000001 -- Got the minfap for H using ovl is 0.635552.
+2017-06-05 23:38:19 -- G000001 -- Got the minfap for L using ovl is 0.054636.
+2017-06-05 23:38:19 -- G000001 -- Ready to run iDQ checks.
+2017-06-05 23:38:20 -- G000004 -- Got the minfap for L using ovl is 0.002625.
+2017-06-05 23:38:21 -- G000002 -- Got the minfap for H using ovl is 0.002563.
+2017-06-05 23:38:21 -- G000004 -- Got the minfap for H using ovl is 0.020959.
+2017-06-05 23:38:21 -- G000003 -- Got the minfap for H using ovl is 0.213288.
+2017-06-05 23:38:22 -- G000002 -- Got the minfap for L using ovl is 0.139567.
+2017-06-05 23:38:22 -- G000003 -- Got the minfap for L using ovl is 4.1e-05.
+2017-06-05 23:38:31 -- G000001 -- Got H1OPS label.
+2017-06-05 23:38:31 -- G000001 -- Got L1OPS label.
+2017-06-05 23:38:32 -- G000001 -- Got ADVREQ label.
+2017-06-05 23:38:32 -- G000000 -- Got EM_Throttled label.
+2017-06-05 23:38:32 -- G000001 -- Got EM_Throttled label.
+2017-06-05 23:38:32 -- G000002 -- Got EM_Throttled label.
+2017-06-05 23:38:34 -- G000003 -- Got EM_Throttled label.
+2017-06-05 23:38:35 -- G000003 -- Got the lvem skymap lalinference_skymap.fits.gz.
+2017-06-05 23:38:36 -- G000002 -- Got the lvem skymap lalinference_skymap.fits.gz.
+2017-06-05 23:38:37 -- G000004 -- Got EM_Throttled label.
+2017-06-05 23:38:37 -- G000001 -- Got the lvem skymap lalinference_skymap.fits.gz.
+2017-06-05 23:38:37 -- G000004 -- Got the lvem skymap bayestar.fits.gz.
+2017-06-05 23:38:38 -- G000004 -- Got the lvem skymap lalinference_skymap.fits.gz.
+2017-06-05 23:38:38 -- G000001 -- Got the lvem skymap bayestar.fits.gz.
+2017-06-05 23:38:39 -- G000002 -- Got the lvem skymap bayestar.fits.gz.
+2017-06-05 23:38:39 -- G000003 -- Got the lvem skymap bayestar.fits.gz.
+2017-06-05 23:39:32 -- G000005 -- Created event dictionary for G000005.
+2017-06-05 23:39:42 -- G000005 -- Low enough FAR. 9e-09 < 1.9e-07
+2017-06-05 23:39:42 -- G000005 -- No hardware injection found near event gpstime +/- 2.0 seconds.
+2017-06-05 23:39:42 -- G000005 -- Passed all new_to_preliminary checks.
+2017-06-05 23:39:42 -- G000005 -- Sending preliminary VOEvent.
+2017-06-05 23:39:42 -- G000005 -- Creating preliminary VOEvent file locally.
+2017-06-05 23:39:42 -- G000005 -- Caught HTTPError: FakeDb instance has no attribute 'createVOEvent'
+2017-06-05 23:39:42 -- G000005 -- State: new_to_preliminary --> preliminary_to_initial.
+2017-06-05 23:39:42 -- G000005 -- Labeling H1OPS.
+2017-06-05 23:39:42 -- G000005 -- Labeling L1OPS.
+2017-06-05 23:39:42 -- G000005 -- Labeling ADVREQ.
+2017-06-05 23:39:43 -- G000005 -- Have not gotten all the minfap values yet.
+2017-06-05 23:39:43 -- G000005 -- Not all operators have signed off yet.
+2017-06-05 23:39:43 -- G000005 -- Advocates have not signed off yet.
+2017-06-05 23:39:43 -- G000005 -- Got the minfap for H using ovl is 0.000107.
+2017-06-05 23:39:43 -- G000005 -- iDQ check result: 0.000107 < 0.01
+2017-06-05 23:39:43 -- G000005 -- Failed idq_joint_fapCheck in currentstate: preliminary_to_initial.
+2017-06-05 23:39:43 -- G000005 -- State: preliminary_to_initial --> rejected.
+2017-06-05 23:39:44 -- G000005 -- Labeling DQV.
+2017-06-05 23:39:44 -- G000005 -- Got the minfap for L using ovl is 0.576919.
+2017-06-05 23:39:45 -- G000005 -- Got H1OPS label.
+2017-06-05 23:39:45 -- G000005 -- Got L1OPS label.
+2017-06-05 23:39:45 -- G000005 -- Got ADVREQ label.
+2017-06-05 23:39:46 -- G000005 -- Got DQV label.
+2017-06-05 23:40:22 -- G000005 -- Got the lvem skymap skyprobcc.fits.gz.
+2017-06-05 23:40:22 -- G000005 -- Got the lvem skymap LIB_skymap.fits.gz.
+2017-06-05 23:40:25 -- G000005 -- Got the lvem skymap BW_skymap.fits.
+2017-06-05 23:41:39 -- G000006 -- Created event dictionary for G000006.
+2017-06-05 23:41:50 -- G000006 -- Rejecting due to Single IFO H1
+2017-06-05 23:41:50 -- G000006 -- Failed ifosCheck in currentstate: new_to_preliminary.
+2017-06-05 23:41:50 -- G000006 -- State: new_to_preliminary --> rejected.
+2017-06-05 23:41:50 -- G000006 -- Got EM_Throttled label.
+2017-06-05 23:41:51 -- G000006 -- Got the minfap for H using ovl is 0.000459.
+2017-06-05 23:41:51 -- G000006 -- Got the minfap for L using ovl is 0.095633.
+2017-06-05 23:42:35 -- G000006 -- Got the lvem skymap lalinference_skymap.fits.gz.
+2017-06-05 23:42:46 -- G000006 -- Got the lvem skymap bayestar.fits.gz.
